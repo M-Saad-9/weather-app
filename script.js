@@ -6,6 +6,11 @@ const humidity = document.querySelector("#humidity");
 const message = document.querySelector("#message");
 const description = document.querySelector("#description");
 const wind = document.querySelector("#wind");
+const image = document.querySelector("#image");
+// const city = document.querySelector("#cityName")
+const feel = document.querySelector("#feel_like")
+const maxTemp = document.querySelector("#temp_max")
+
 
 const formHandler = async (event) =>{
   try {
@@ -16,41 +21,57 @@ const formHandler = async (event) =>{
     humidity.innerText = "";
     description.innerText = "";
     wind.innerText ="";
+    image.src="";
+    feel.innerText="";
+    maxTemp.innerText="";
     
     const city = input.value;
-    const response = await axios 
-    (`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${Api_key}&units=metric`);
+    const response = await axios (`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${Api_key}&units=metric`);
     
-  /*  switch (response.data.weather[0].main) {
-        case 'Clear':
-            Image.src = "image/clear.png";
-            break;
-         case 'Rain':
-                Image.src = "image/rain.png";
-            break;
-         case 'Snow':
-                Image.src = "image/snow.png";
-            break;    
-        case 'Clouds':
-                Image.src = "image/cloud.png";
-            break;
-        case 'Mist':
-                Image.src = "image/mist.png";
-            break;
-        case 'Haze':
-                Image.src = "image/mist.png";
-            break;
-        default:
-            Image.src = "";
-    }*/
 
+    switch (response.data.weather[0].main){
+       case 'Clear':
+         image.src = 'image/clear-sky.png';
+        break;
+       case 'Clouds':
+         image.src = 'image/clouds.png';
+        break;
+       case 'Rain':
+         image.src = 'image/rain.png';
+        break;
+       case 'Snow':
+         image.src = 'image/snow.png';
+        break;
+      case 'Mist':
+          image.src = 'image/mist.png';
+        break;
+      case 'Haze':
+          image.src = 'image/haze.png';
+        break;
+      case 'Thunderstorm':
+          image.src = 'image/Thunderstorm.png';
+        break;
+      case 'Dust':
+          image.src = 'image/Dust.png';
+        break;
+       default:
+         image.src = '';
+      }
+
+      const roundedTemp = Math.round(response.data.main.temp);
+      const roundMaxTemp = Math.round(response.data.main.temp_max)
+    
     message.innerText = "";
-    temp.innerText = ` ${response.data.main.temp}°C`;
+    temp.innerText =  `${roundedTemp}°C`;
+    feel.innerText= `Feels Like: ${response.data.main.feels_like}`
     humidity.innerText = `Humidity: ${response.data.main.humidity}%`;
+    maxTemp.innerText = `Max Temp: ${roundMaxTemp}°C`
     description.innerText = ` ${response.data.weather[0].description}`
-    wind.innerText = `wind: ${response.data.wind.speed}Km/h`;
+    wind.innerText = `Wind: ${response.data.wind.speed}Km/h`;
+    // city.innerText = `${response.data.name};`
 
-   console.log("🚀 ~ formHandler ~ response:", response.data);
+   
+  console.log(response.data);
   } catch (error) {
         console.log(error);
 
@@ -58,52 +79,3 @@ const formHandler = async (event) =>{
   }
 }
 form.addEventListener("submit", formHandler);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*document.getElementById('get-weather-btn').addEventListener('click', function() {
-   
-    
-    const city = document.getElementById('city-input').value;
-    
-   
-    const apiKey = '757e70353f767c3cf8643d2ddabf0eb8';  
-    
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
-
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            if (data.cod === 200) {
-                const cityName = data.name;
-                const temperature = data.main.temp;
-                const description = data.weather[0].description;
-
-                document.getElementById('city-name').innerText = `Weather in ${cityName}`;
-                document.getElementById('temperature').innerText = `Temperature: ${temperature}°C`;
-                document.getElementById('description').innerText = `Description: ${description}`;
-            } else {
-                document.getElementById('city-name').innerText = 'City not found';
-                document.getElementById('temperature').innerText = '';
-                document.getElementById('description').innerText = '';
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching weather data:', error);
-            document.getElementById('city-name').innerText = 'Error fetching weather data';
-            document.getElementById('temperature').innerText = '';
-            document.getElementById('description').innerText = '';
-        });
-});*/
